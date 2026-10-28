@@ -24,7 +24,6 @@ class AdminProfileRepository {
       throw Exception('This page is only available to admins.');
     }
 
-    // Email belongs to Supabase Auth, not the profiles table.
     profile['email'] = user.email ?? '';
 
     return profile;
