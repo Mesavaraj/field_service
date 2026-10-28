@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../core/di/service_locator.dart';
 import '../../../repositorys/service_request_form_repository.dart';
+import 'customer_home_view_model.dart';
 
 class ServiceRequestViewModel extends ChangeNotifier {
   ServiceRequestViewModel({required this.category});
@@ -46,6 +47,8 @@ class ServiceRequestViewModel extends ChangeNotifier {
   Future<String?> loadProfile() async {
     isLoadingProfile = true;
     _notify();
+
+    if (category != null) selectedCategory = category;
 
     try {
       final profile = await _repository.loadProfile();
@@ -216,6 +219,7 @@ class ServiceRequestViewModel extends ChangeNotifier {
       };
 
       final isSynced = await _repository.submitRequest(requestData);
+      await getIt<CustomerHomeViewModel>().refresh();
 
       if (isSynced) {
         return 'Service request submitted successfully.';

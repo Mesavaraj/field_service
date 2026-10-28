@@ -342,6 +342,17 @@ class _TechnicianProfilePageState extends State<TechnicianProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/technician');
+            }
+          },
+        ),
+        automaticallyImplyLeading: true,
         title: const Text('My Profile'),
         actions: [
           IconButton(

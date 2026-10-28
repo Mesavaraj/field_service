@@ -11,10 +11,25 @@ import 'package:field_service/repositorys/customer_profile_repository.dart';
 import 'package:field_service/repositorys/customer_request_tracking_repository.dart';
 import 'package:field_service/repositorys/service_request_form_repository.dart';
 import 'package:field_service/repositorys/service_request_repository.dart';
+import 'package:field_service/repositorys/admin_profile_repository.dart';
+import 'package:field_service/repositorys/technician_local_repository.dart';
+import 'package:field_service/repositorys/technician_repository.dart';
+import 'package:field_service/repositorys/technician_task_details_repository.dart';
+
+import 'package:field_service/features/admin/viewmodels/admin_profile_view_model.dart';
+import 'package:field_service/features/technician/viewmodel/technician_view_model.dart';
+import 'package:field_service/features/technician/viewmodel/technician_dashboard_viewmodel.dart';
+import 'package:field_service/features/technician/viewmodel/technician_task_details_viewmodel.dart';
+
 import 'package:field_service/services/api_service.dart';
 import 'package:field_service/services/network_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../features/admin/viewmodels/customer_view_model.dart';
+import '../../features/admin/viewmodels/job_monitoring_view_model.dart';
+import '../../repositorys/customer_repository.dart';
+import '../../repositorys/job_monitoring_repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -64,7 +79,39 @@ void setupDependencies() {
     ),
   );
 
+  getIt.registerLazySingleton<AdminProfileRepository>(
+    () => AdminProfileRepository(Supabase.instance.client),
+  );
+  getIt.registerLazySingleton<TechnicianLocalRepository>(
+    () => TechnicianLocalRepository(),
+  );
+
+  getIt.registerLazySingleton<TechnicianRepository>(
+    () => TechnicianRepository(
+      client: Supabase.instance.client,
+      localRepository: getIt<TechnicianLocalRepository>(),
+    ),
+  );
+  getIt.registerLazySingleton<TechnicianTaskDetailsRepository>(
+    () => TechnicianTaskDetailsRepository(
+      client: Supabase.instance.client,
+      local: getIt<TechnicianLocalRepository>(),
+    ),
+  );
+  getIt.registerLazySingleton<CustomerRepository>(
+    () => CustomerRepository(Supabase.instance.client),
+  );
+  getIt.registerLazySingleton<JobMonitoringRepository>(
+    () => JobMonitoringRepository(Supabase.instance.client),
+  );
+
   // ViewModels
+  getIt.registerFactory<CustomerViewModel>(
+    () => CustomerViewModel(getIt<CustomerRepository>()),
+  );
+  getIt.registerFactory<JobMonitoringViewModel>(
+    () => JobMonitoringViewModel(getIt<JobMonitoringRepository>()),
+  );
   getIt.registerFactory<AuthViewModel>(
     () => AuthViewModel(getIt<AuthRepository>()),
   );
@@ -81,4 +128,20 @@ void setupDependencies() {
     Map<String, dynamic>,
     void
   >((request, _) => CustomerRequestTrackingViewModel(request: request));
+
+  getIt.registerFactory<AdminProfileViewModel>(
+    () => AdminProfileViewModel(getIt<AdminProfileRepository>()),
+  );
+  getIt.registerFactory<TechnicianViewModel>(
+    () => TechnicianViewModel(getIt<TechnicianRepository>()),
+  );
+  getIt.registerFactory<TechnicianDashboardViewModel>(
+    () => TechnicianDashboardViewModel(getIt<TechnicianRepository>()),
+  );
+  getIt.registerFactoryParam<TechnicianTaskDetailsViewModel, String, void>(
+    (taskId, _) => TechnicianTaskDetailsViewModel(
+      repository: getIt<TechnicianTaskDetailsRepository>(),
+      taskId: taskId,
+    ),
+  );
 }

@@ -18,6 +18,7 @@ class CustomerHomeViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> loadRecentRequests() async {
+    print('loadRecentRequests ca;lee');
     if (_disposed || _isLoading) return;
 
     _isLoading = true;
@@ -30,13 +31,14 @@ class CustomerHomeViewModel extends ChangeNotifier {
       if (user == null) {
         throw Exception('Please sign in to view your requests.');
       }
-
+      _recentRequests = [];
       final requests = await getIt<ServiceRequestRepository>()
           .getRecentRequests(user.id);
 
       if (_disposed) return;
 
       _recentRequests = requests;
+      notifyListeners();
     } catch (error, stackTrace) {
       debugPrint('Unable to load customer requests: $error');
       debugPrintStack(stackTrace: stackTrace);

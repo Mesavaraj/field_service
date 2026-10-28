@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../technician/viewmodel/technician_view_model.dart';
-import '../viewmodels/technician_view_model.dart';
 
 class AdminTechniciansPage extends StatefulWidget {
   const AdminTechniciansPage({super.key});

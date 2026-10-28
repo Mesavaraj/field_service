@@ -32,11 +32,7 @@ class _CustomerHomeContentState extends State<_CustomerHomeContent> {
     final pages = <Widget>[
       const _CustomerDashboard(),
       const RecentRequestsWidget(),
-      // const _PlaceholderPage(
-      //   title: 'Notifications',
-      //   icon: Icons.notifications_none,
-      // ),
-      CustomerProfileScreen(),
+      const CustomerProfileScreen(),
     ];
 
     return Scaffold(
@@ -45,7 +41,7 @@ class _CustomerHomeContentState extends State<_CustomerHomeContent> {
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
+        onDestinationSelected: (index) async {
           setState(() => _selectedIndex = index);
         },
         destinations: const [
@@ -58,10 +54,6 @@ class _CustomerHomeContentState extends State<_CustomerHomeContent> {
             icon: Icon(Icons.assignment_outlined),
             label: 'Requests',
           ),
-          // NavigationDestination(
-          //   icon: Icon(Icons.notifications_none),
-          //   label: 'Alerts',
-          // ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
             label: 'Profile',
@@ -153,8 +145,15 @@ class _CustomerDashboard extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
-                  onPressed: () {
-                    context.push('/customer/service-request');
+                  onPressed: () async {
+                    final result = await context.push(
+                      '/customer/service-request',
+                    );
+                    if (result == true && context.mounted) {
+                      context
+                          .read<CustomerHomeViewModel>()
+                          .loadRecentRequests();
+                    }
                   },
                   icon: const Icon(Icons.add),
                   label: const Text('Create Service Request'),
@@ -176,11 +175,16 @@ class _CustomerDashboard extends StatelessWidget {
                     child: _ServiceCard(
                       icon: Icons.electrical_services,
                       title: 'Electrical',
-                      onTap: () {
-                        context.push(
+                      onTap: () async {
+                        final result = await context.push(
                           '/customer/service-request',
                           extra: 'Electrical',
                         );
+                        if (result == true && context.mounted) {
+                          context
+                              .read<CustomerHomeViewModel>()
+                              .loadRecentRequests();
+                        }
                       },
                     ),
                   ),
@@ -189,11 +193,16 @@ class _CustomerDashboard extends StatelessWidget {
                     child: _ServiceCard(
                       icon: Icons.water_drop_outlined,
                       title: 'Plumbing',
-                      onTap: () {
-                        context.push(
+                      onTap: () async {
+                        final result = await context.push(
                           '/customer/service-request',
                           extra: 'Plumbing',
                         );
+                        if (result == true && context.mounted) {
+                          context
+                              .read<CustomerHomeViewModel>()
+                              .loadRecentRequests();
+                        }
                       },
                     ),
                   ),
@@ -207,12 +216,17 @@ class _CustomerDashboard extends StatelessWidget {
                   Expanded(
                     child: _ServiceCard(
                       icon: Icons.ac_unit,
-                      title: 'Appliance',
-                      onTap: () {
-                        context.push(
+                      title: 'Appliance Repair',
+                      onTap: () async {
+                        final result = await context.push(
                           '/customer/service-request',
-                          extra: 'Appliance',
+                          extra: 'Appliance Repair',
                         );
+                        if (result == true && context.mounted) {
+                          context
+                              .read<CustomerHomeViewModel>()
+                              .loadRecentRequests();
+                        }
                       },
                     ),
                   ),
@@ -221,11 +235,16 @@ class _CustomerDashboard extends StatelessWidget {
                     child: _ServiceCard(
                       icon: Icons.build_outlined,
                       title: 'Other repairs',
-                      onTap: () {
-                        context.push(
+                      onTap: () async {
+                        final result = await context.push(
                           '/customer/service-request',
                           extra: 'Other',
                         );
+                        if (result == true && context.mounted) {
+                          context
+                              .read<CustomerHomeViewModel>()
+                              .loadRecentRequests();
+                        }
                       },
                     ),
                   ),
@@ -482,25 +501,6 @@ class _RecentRequestsList extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                if (!synced)
-                                  const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.sync,
-                                        size: 14,
-                                        color: Colors.orange,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        'Waiting to sync',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.orange,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                               ],
                             ),
                           ],

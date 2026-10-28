@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:field_service/features/technician/view/technician_live_map.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -9,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../core/di/service_locator.dart';
 import '../../../core/utils/format_schedule.dart';
+import '../viewmodel/technician_dashboard_viewmodel.dart';
 import '../viewmodel/technician_task_details_viewmodel.dart';
 
 class TechnicianTaskDetailsPage extends StatelessWidget {
@@ -31,176 +33,185 @@ class _TaskDetailsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TechnicianTaskDetailsViewModel>(
-      builder: (context, vm, child) {
-        final task = vm.task;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (val, v) async {
+        await getIt<TechnicianDashboardViewModel>().loadTasks();
+        context.go('/technician');
+      },
+      child: Consumer<TechnicianTaskDetailsViewModel>(
+        builder: (context, vm, child) {
+          final task = vm.task;
 
-        return Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          appBar: AppBar(
-            title: const Text('Task Details'),
-            centerTitle: false,
-            actions: [
-              IconButton(
-                tooltip: 'Refresh task',
-                onPressed: vm.isLoading ? null : vm.loadTask,
-                icon: const Icon(Icons.refresh_rounded),
-              ),
-            ],
-          ),
-          body: vm.isLoading && task == null
-              ? const Center(child: CircularProgressIndicator())
-              : task == null
-              ? _ErrorView(
-                  message: vm.error ?? 'No task details found.',
-                  onRetry: vm.loadTask,
-                )
-              : RefreshIndicator(
-                  onRefresh: vm.loadTask,
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      if (vm.isOffline) ...[
-                        const _OfflineBanner(),
-                        const SizedBox(height: 16),
-                      ],
-
-                      _TaskHeader(
-                        title: task.title,
-                        id: task.id,
-                        status: task.status,
-                      ),
-                      const SizedBox(height: 16),
-
-                      _SectionCard(
-                        title: 'Request information',
-                        icon: Icons.assignment_outlined,
-                        children: [
-                          _DetailTile(
-                            icon: Icons.description_outlined,
-                            label: 'Description',
-                            value: task.description,
-                          ),
-                          _DetailTile(
-                            icon: Icons.person_outline_rounded,
-                            label: 'Customer ID',
-                            value: task.customerId,
-                          ),
-                          _DetailTile(
-                            icon: Icons.calendar_month_outlined,
-                            label: 'Preferred date',
-                            value: task.preferredDate ?? 'Not specified',
-                          ),
-                          _DetailTile(
-                            icon: Icons.event_available_rounded,
-                            label: 'Scheduled job date & time',
-                            value: formatSchedule(task.scheduledAt),
-                          ),
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            appBar: AppBar(
+              title: const Text('Task Details'),
+              centerTitle: false,
+              actions: [
+                IconButton(
+                  tooltip: 'Refresh task',
+                  onPressed: vm.isLoading ? null : vm.loadTask,
+                  icon: const Icon(Icons.refresh_rounded),
+                ),
+              ],
+            ),
+            body: vm.isLoading && task == null
+                ? const Center(child: CircularProgressIndicator())
+                : task == null
+                ? _ErrorView(
+                    message: vm.error ?? 'No task details found.',
+                    onRetry: vm.loadTask,
+                  )
+                : RefreshIndicator(
+                    onRefresh: vm.loadTask,
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        if (vm.isOffline) ...[
+                          const _OfflineBanner(),
+                          const SizedBox(height: 16),
                         ],
-                      ),
-                      const SizedBox(height: 16),
 
-                      _SectionCard(
-                        title: 'Service location',
-                        icon: Icons.location_on_outlined,
-                        children: [
-                          _DetailTile(
-                            icon: Icons.place_outlined,
-                            label: 'Address',
-                            value: task.address,
-                          ),
-                          if (task.latitude != null && task.longitude != null)
+                        _TaskHeader(
+                          title: task.title,
+                          id: task.id,
+                          status: task.status,
+                        ),
+                        const SizedBox(height: 16),
+
+                        _SectionCard(
+                          title: 'Request information',
+                          icon: Icons.assignment_outlined,
+                          children: [
                             _DetailTile(
-                              icon: Icons.gps_fixed_rounded,
-                              label: 'Coordinates',
-                              value: '${task.latitude}, ${task.longitude}',
+                              icon: Icons.description_outlined,
+                              label: 'Description',
+                              value: task.description,
                             ),
-                          const SizedBox(height: 8),
-                          if (task.latitude != null && task.longitude != null)
-                            SizedBox(
-                              height: 410,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: TechnicianLiveMapScreen(
-                                  customerLatitude: task.latitude!,
-                                  customerLongitude: task.longitude!,
-                                  customerAddress: task.address,
-                                  taskTitle: task.title,
-                                  taskStatus: task.status,
-                                  onOpenFullScreen: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) => Scaffold(
-                                          appBar: AppBar(
-                                            title: const Text(
-                                              'Live Technician Tracking',
+                            _DetailTile(
+                              icon: Icons.person_outline_rounded,
+                              label: 'Customer ID',
+                              value: task.customerId,
+                            ),
+                            _DetailTile(
+                              icon: Icons.calendar_month_outlined,
+                              label: 'Preferred date',
+                              value: task.preferredDate ?? 'Not specified',
+                            ),
+                            _DetailTile(
+                              icon: Icons.event_available_rounded,
+                              label: 'Scheduled job date & time',
+                              value: formatSchedule(task.scheduledAt),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        _SectionCard(
+                          title: 'Service location',
+                          icon: Icons.location_on_outlined,
+                          children: [
+                            _DetailTile(
+                              icon: Icons.place_outlined,
+                              label: 'Address',
+                              value: task.address,
+                            ),
+                            if (task.latitude != null && task.longitude != null)
+                              _DetailTile(
+                                icon: Icons.gps_fixed_rounded,
+                                label: 'Coordinates',
+                                value: '${task.latitude}, ${task.longitude}',
+                              ),
+                            const SizedBox(height: 8),
+                            if (task.latitude != null && task.longitude != null)
+                              SizedBox(
+                                height: 410,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: TechnicianLiveMapScreen(
+                                    customerLatitude: task.latitude!,
+                                    customerLongitude: task.longitude!,
+                                    customerAddress: task.address,
+                                    taskTitle: task.title,
+                                    taskStatus: task.status,
+                                    onOpenFullScreen: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => Scaffold(
+                                            appBar: AppBar(
+                                              title: const Text(
+                                                'Live Technician Tracking',
+                                              ),
                                             ),
-                                          ),
-                                          body: SafeArea(
-                                            child: TechnicianLiveMapScreen(
-                                              customerLatitude: task.latitude!,
-                                              customerLongitude:
-                                                  task.longitude!,
-                                              customerAddress: task.address,
-                                              taskTitle: task.title,
-                                              taskStatus: task.status,
-                                              fullScreen: true,
+                                            body: SafeArea(
+                                              child: TechnicianLiveMapScreen(
+                                                customerLatitude:
+                                                    task.latitude!,
+                                                customerLongitude:
+                                                    task.longitude!,
+                                                customerAddress: task.address,
+                                                taskTitle: task.title,
+                                                taskStatus: task.status,
+                                                fullScreen: true,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            )
-                          else
-                            const Text('Customer location is not available.'),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
+                              )
+                            else
+                              const Text('Customer location is not available.'),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
 
-                      if (vm.error != null) ...[
-                        Text(
-                          vm.error!,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                        if (vm.error != null) ...[
+                          Text(
+                            vm.error!,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
+                          const SizedBox(height: 12),
+                        ],
+
+                        if (task.isAssigned)
+                          FilledButton.icon(
+                            onPressed: vm.isUpdating
+                                ? null
+                                : () =>
+                                      _updateStatus(context, vm, 'in_progress'),
+                            icon: const Icon(Icons.play_arrow_rounded),
+                            label: const Text('Start Work'),
+                          ),
+
+                        if (task.isInProgress)
+                          FilledButton.icon(
+                            onPressed: vm.isUpdating
+                                ? null
+                                : () => _updateStatus(context, vm, 'completed'),
+                            icon: const Icon(Icons.check_circle_outline),
+                            label: const Text('Complete Work'),
+                          ),
+
+                        if (task.isCompleted) const _CompletedBanner(),
+
+                        if (vm.isUpdating) ...[
+                          const SizedBox(height: 12),
+                          const Center(child: CircularProgressIndicator()),
+                        ],
+                        const SizedBox(height: 24),
                       ],
-
-                      if (task.isAssigned)
-                        FilledButton.icon(
-                          onPressed: vm.isUpdating
-                              ? null
-                              : () => _updateStatus(context, vm, 'in_progress'),
-                          icon: const Icon(Icons.play_arrow_rounded),
-                          label: const Text('Start Work'),
-                        ),
-
-                      if (task.isInProgress)
-                        FilledButton.icon(
-                          onPressed: vm.isUpdating
-                              ? null
-                              : () => _updateStatus(context, vm, 'completed'),
-                          icon: const Icon(Icons.check_circle_outline),
-                          label: const Text('Complete Work'),
-                        ),
-
-                      if (task.isCompleted) const _CompletedBanner(),
-
-                      if (vm.isUpdating) ...[
-                        const SizedBox(height: 12),
-                        const Center(child: CircularProgressIndicator()),
-                      ],
-                      const SizedBox(height: 24),
-                    ],
+                    ),
                   ),
-                ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

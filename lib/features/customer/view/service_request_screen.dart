@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/di/service_locator.dart';
+import '../viewmodel/customer_home_view_model.dart';
+import '../viewmodel/customer_request_tracking_view_model.dart';
 import '../viewmodel/service_request_view_model.dart';
 
 class ServiceRequestScreen extends StatelessWidget {
@@ -275,10 +279,16 @@ class _ServiceRequestView extends StatelessWidget {
 
                                     if (message ==
                                         'Service request submitted successfully.') {
-                                      Navigator.of(context).pop(true);
+                                      vm.clearForm();
+
+                                      // Pop back with true to indicate a refresh is needed.
+                                      context.pop(true);
                                     } else if (message ==
                                         'Request saved locally. Synchronization is pending.') {
                                       vm.clearForm();
+
+                                      // Pop back with true as it's saved locally.
+                                      context.pop(true);
                                     }
                                   },
                             icon: vm.isSubmitting

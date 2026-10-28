@@ -237,11 +237,20 @@ class _TaskCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () {
-          context.push(
+        onTap: () async {
+          await context.push(
             '/technician/task-details/${Uri.encodeComponent(task.id)}',
           );
+
+          if (!context.mounted) return;
+
+          await getIt<TechnicianDashboardViewModel>().loadTasks();
         },
+        // onTap: () {
+        //   context.push(
+        //     '/technician/task-details/${Uri.encodeComponent(task.id)}',
+        //   );
+        // },
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

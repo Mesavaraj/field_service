@@ -117,12 +117,6 @@ class CustomerProfileViewModel extends ChangeNotifier {
     _notify();
 
     try {
-      final enabled = await Geolocator.isLocationServiceEnabled();
-
-      if (!enabled) {
-        throw Exception('Please enable device location.');
-      }
-
       var permission = await Geolocator.checkPermission();
 
       if (permission == LocationPermission.denied) {
@@ -134,6 +128,12 @@ class CustomerProfileViewModel extends ChangeNotifier {
         throw Exception(
           'Location permission is required. Please enable it in settings.',
         );
+      }
+
+      final enabled = await Geolocator.isLocationServiceEnabled();
+
+      if (!enabled) {
+        throw Exception('Please enable device location.');
       }
 
       final position = await Geolocator.getCurrentPosition(

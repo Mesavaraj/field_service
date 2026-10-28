@@ -29,7 +29,8 @@ class TechnicianRepository {
       final response = await client
           .from('tasks')
           .select()
-          .eq('technician_id', technicianId);
+          .eq('technician_id', technicianId)
+          .order('created_at', ascending: false);
 
       print('response123: $response');
 

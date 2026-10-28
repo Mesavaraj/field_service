@@ -1,17 +1,89 @@
-# field_service
+# Field Service Management App
 
-A new Flutter project.
+A comprehensive, cross-platform Field Service Management solution built with **Flutter**. This application streamlines the workflow between customers needing repairs, technicians executing the jobs, and administrators overseeing the operations. 
 
-## Getting Started
+## 📱 Features by Role
 
-This project is a starting point for a Flutter application.
+### 👨‍💼 Admin Portal
+* **Dashboard**: Overview of all ongoing field operations.
+* **Job Monitoring**: Track service requests and technician locations in real-time.
+* **Technician Management**: Assign jobs, monitor availability, and track performance.
+* **Customer Management**: View customer profiles and service histories.
+* **Reports & Analytics**: Generate insights on completed jobs, revenue, and efficiency.
 
-A few resources to get you started if this is your first Flutter project:
+### 👷‍♂️ Technician App
+* **Task Management**: Accept, update, and complete assigned service tasks.
+* **Live Mapping**: Navigate to customer locations with integrated maps.
+* **Offline Mode**: Work seamlessly in areas with poor connectivity; data syncs automatically when back online.
+* **Task Details**: Access comprehensive job requirements, history, and customer notes.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+### 👤 Customer App
+* **Service Requests**: Easily request electrical, plumbing, appliance repair, and other services.
+* **Request Tracking**: Monitor the live status of active service requests.
+* **Profile Management**: Update contact details and service addresses.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Tech Stack & Architecture
+
+* **Framework**: [Flutter](https://flutter.dev/) (Dart)
+* **State Management**: `provider` 
+* **Routing**: `go_router`
+* **Dependency Injection**: `get_it` (Service Locator Pattern)
+* **Backend / Database**: [Supabase](https://supabase.com/) (PostgreSQL & Authentication)
+* **API / Networking**: REST APIs using `http`, connectivity checks via `connectivity_plus` and `internet_connection_checker_plus`
+* **Local Storage / Offline Sync**: `sqflite` (SQLite) and `shared_preferences`
+* **Location & Mapping**: `flutter_map` (OpenStreetMap integration), `geolocator`, and `geocoding`
+* **Environment Management**: `flutter_dotenv`
+
+## 📸 Screenshots
+
+Here is a glimpse of the application interfaces across Admin, Technician, and Customer portals:
+
+<div align="center">
+  <img src="./screenshots/Screenshot_1793174409.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174421.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174426.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174433.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174436.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174519.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174522.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174580.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174585.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174747.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174761.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174765.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174768.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174807.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174810.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/Screenshot_1793174814.png" width="200" style="margin: 8px;" />
+</div>
+
+## 🚀 Getting Started
+
+### Prerequisites
+* Flutter SDK (latest stable version)
+* Supabase Account (for backend services)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd field_service
+   ```
+
+2. **Install Dependencies:**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Configure Environment:**
+   Ensure your Supabase URL and Anon Key are correctly configured in your initialization file (`main.dart` or `.env` depending on your setup).
+
+4. **Run the App:**
+   ```bash
+   flutter run
+   ```
+
+## 📄 License
+
+This project is licensed under the MIT License.

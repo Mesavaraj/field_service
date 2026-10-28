@@ -106,13 +106,10 @@ class ServiceRequestRepository {
           .from('service_requests')
           .select()
           .eq('customer_id', customerId)
-          .order('created_at', ascending: false)
-          .limit(5);
+          .order('created_at', ascending: false);
 
       final onlineRequests = List<Map<String, dynamic>>.from(response);
 
-      // TODO: Save online results into SQLite so they are
-      // available offline on the next app launch.
       return onlineRequests;
     } catch (e) {
       debugPrint('Using offline requests: $e');
