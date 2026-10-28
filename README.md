@@ -41,26 +41,23 @@ Here is a glimpse of the application interfaces across Admin, Technician, and Cu
 <div align="center">
 
 ### 👨‍💼 Admin Portal
-  <img src="./screenshots/Screenshot_1793174409.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174421.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174426.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174433.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174436.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/admin_dashboard.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/admin_service_request.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/admin_tech.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/admin_cust.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/admin_monitor.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/admin_report.png" width="200" style="margin: 8px;" />
 
 ### 👷‍♂️ Technician App
-  <img src="./screenshots/Screenshot_1793174519.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174522.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174580.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174585.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174747.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/tech_dashboard.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/tech_task.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/tech_map.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/tech_profile.png" width="200" style="margin: 8px;" />
 
 ### 👤 Customer App
-  <img src="./screenshots/Screenshot_1793174761.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174765.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174768.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174807.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174810.png" width="200" style="margin: 8px;" />
-  <img src="./screenshots/Screenshot_1793174814.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/cust_dashboard.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/cust_requst.png" width="200" style="margin: 8px;" />
+  <img src="./screenshots/cust_profile.png" width="200" style="margin: 8px;" />
 
 </div>
 
